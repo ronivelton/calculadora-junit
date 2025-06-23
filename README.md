@@ -24,11 +24,9 @@ calculadora-junit/
 ├── src/
 │   ├── main/
 │   │   └── java/
-│   │       └── dev/ronivelton/calculadora/
 │   │           └── Calculadora.java
 │   └── test/
 │       └── java/
-│           └── dev/ronivelton/calculadora/
 │               └── CalculadoraTest.java
 ├── pom.xml
 ├── .gitignore
