@@ -31,4 +31,23 @@ public class Calculadora {
         }
         return Math.sqrt(numero);
     }
+
+    public double calcularPorcentagem(double valor, double porcentagem) {
+        return (valor * porcentagem) / 100.0;
+    }
+
+    public double qualPorcentagem(double parte, double total) {
+        if (total == 0) {
+            throw new IllegalArgumentException("O valor total não pode ser zero");
+        }
+        return (parte / total) * 100.0;
+    }
+
+    public double adicionarPorcentagem(double valor, double porcentagem) {
+        return valor + calcularPorcentagem(valor, porcentagem);
+    }
+
+    public double subtrairPorcentagem(double valor, double porcentagem) {
+        return valor - calcularPorcentagem(valor, porcentagem);
+    }
 }

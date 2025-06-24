@@ -264,4 +264,95 @@ public class CalculadoraTest {
                     exception.getMessage());
         }
     }
+
+    @Nested
+    @DisplayName("Testes de Operações com Porcentagem")
+    class TestesPorcentagem {
+
+        @Test
+        @DisplayName("Deve calcular porcentagem corretamente")
+        void deveCalcularPorcentagem() {
+            assertAll("Cálculos de porcentagem",
+                    () -> assertEquals(20.0, calculadora.calcularPorcentagem(200, 10),
+                            "10% de 200 deveria ser 20"),
+                    () -> assertEquals(50.0, calculadora.calcularPorcentagem(100, 50),
+                            "50% de 100 deveria ser 50"),
+                    () -> assertEquals(0.0, calculadora.calcularPorcentagem(100, 0),
+                            "0% de qualquer valor deveria ser 0"),
+                    () -> assertEquals(200.0, calculadora.calcularPorcentagem(100, 200),
+                            "200% de 100 deveria ser 200"),
+                    () -> assertEquals(1.5, calculadora.calcularPorcentagem(50, 3),
+                            "3% de 50 deveria ser 1.5")
+            );
+        }
+
+        @Test
+        @DisplayName("Deve calcular qual porcentagem um valor representa de outro")
+        void deveCalcularQualPorcentagem() {
+            assertAll("Cálculos de representação percentual",
+                    () -> assertEquals(25.0, calculadora.qualPorcentagem(50, 200),
+                            "50 de 200 deveria ser 25%"),
+                    () -> assertEquals(100.0, calculadora.qualPorcentagem(100, 100),
+                            "100 de 100 deveria ser 100%"),
+                    () -> assertEquals(150.0, calculadora.qualPorcentagem(150, 100),
+                            "150 de 100 deveria ser 150%"),
+                    () -> assertEquals(0.0, calculadora.qualPorcentagem(0, 100),
+                            "0 de qualquer valor deveria ser 0%")
+            );
+        }
+
+        @Test
+        @DisplayName("Deve lançar exceção ao calcular porcentagem com total zero")
+        void deveLancarExcecaoQuandoTotalForZero() {
+            IllegalArgumentException exception = assertThrows(
+                    IllegalArgumentException.class,
+                    () -> calculadora.qualPorcentagem(50, 0),
+                    "Deveria lançar exceção quando total for zero"
+            );
+
+            assertEquals("O valor total não pode ser zero", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("Deve adicionar porcentagem a um valor")
+        void deveAdicionarPorcentagem() {
+            // Cenários comuns de aumento percentual
+            assertEquals(110.0, calculadora.adicionarPorcentagem(100, 10),
+                    "100 + 10% deveria ser 110");
+            assertEquals(1250.0, calculadora.adicionarPorcentagem(1000, 25),
+                    "1000 + 25% deveria ser 1250");
+            assertEquals(100.0, calculadora.adicionarPorcentagem(100, 0),
+                    "Adicionar 0% não deveria alterar o valor");
+        }
+
+        @Test
+        @DisplayName("Deve subtrair porcentagem de um valor")
+        void deveSubtrairPorcentagem() {
+            // Cenários comuns de desconto
+            assertEquals(90.0, calculadora.subtrairPorcentagem(100, 10),
+                    "100 - 10% deveria ser 90");
+            assertEquals(750.0, calculadora.subtrairPorcentagem(1000, 25),
+                    "1000 - 25% deveria ser 750");
+            assertEquals(100.0, calculadora.subtrairPorcentagem(100, 0),
+                    "Subtrair 0% não deveria alterar o valor");
+            assertEquals(0.0, calculadora.subtrairPorcentagem(100, 100),
+                    "Subtrair 100% deveria resultar em 0");
+        }
+
+        @ParameterizedTest
+        @DisplayName("Deve aplicar descontos comerciais comuns corretamente")
+        @CsvSource({
+                "100.00, 5, 95.00",    // 5% de desconto
+                "100.00, 10, 90.00",   // 10% de desconto
+                "100.00, 15, 85.00",   // 15% de desconto
+                "100.00, 20, 80.00",   // 20% de desconto
+                "100.00, 25, 75.00",   // 25% de desconto
+                "100.00, 50, 50.00",   // 50% de desconto (metade do preço)
+        })
+        void deveAplicarDescontosCorretamente(double precoOriginal, double percentualDesconto, double precoFinal) {
+            assertEquals(precoFinal, calculadora.subtrairPorcentagem(precoOriginal, percentualDesconto), 0.01,
+                    String.format("Preço %.2f com desconto de %.0f%% deveria ser %.2f",
+                            precoOriginal, percentualDesconto, precoFinal));
+        }
+    }
 }
